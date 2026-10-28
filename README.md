@@ -1,5 +1,7 @@
 # OraLikeBatch
 
+[![Build Windows EXE](https://github.com/miralexand/OraLikeBatch/actions/workflows/build.yml/badge.svg)](https://github.com/miralexand/OraLikeBatch/actions/workflows/build.yml)
+
 Oracle 批量模糊查询小工具，基于 `tkinter`、`python-oracledb`、`pandas` 和 `openpyxl`。
 
 支持从 Excel 复制一列后批量粘贴查询，按批生成 `LIKE` 条件，查询结果合并去重，并导出包含“未匹配值”的 Excel 文件。数据库连接信息可在界面中保存，密码使用 Windows DPAPI 按当前用户加密。
@@ -36,7 +38,30 @@ pip install -r requirements.txt
 python oracle_batch_query.py
 ```
 
-## 打包为 exe
+## 下载与 GitHub 自动构建
+
+已发布版本：`0.0.1`
+
+下载地址：
+
+https://github.com/miralexand/OraLikeBatch/releases
+
+仓库使用 GitHub Actions 在 Windows runner 上自动构建 exe。推送任意 tag 后会触发 `.github/workflows/build.yml`，构建完成后自动创建对应的 GitHub Release 并上传 Windows 可执行文件：
+
+```powershell
+git tag -a 0.0.1 -m "Release 0.0.1"
+git push origin 0.0.1
+```
+
+Release 资产文件名类似：
+
+```text
+OracleBatchQuery-0.0.1-win64.exe
+```
+
+也可以在 GitHub 的 Actions 页面手动触发构建，手动构建只上传 Actions artifact，不创建 Release。
+
+## 本地打包为 exe
 
 已提供 PyInstaller 打包脚本，会自动创建隔离的 `.venv-build` 环境，避免受本机已有 Python 包影响。
 
@@ -52,7 +77,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\build_exe.ps1
 dist\OracleBatchQuery.exe
 ```
 
-仓库中也已包含构建好的 Windows 单文件程序：`dist/OracleBatchQuery.exe`。单文件模式首次启动会解压运行文件，可能比直接运行源码慢几秒。
+单文件模式首次启动会解压运行文件，可能比直接运行源码慢几秒。
 
 ## 使用步骤
 
@@ -162,9 +187,10 @@ PyInstaller 单文件程序可能被部分杀毒软件误报，可添加信任�
 ## 项目结构
 
 ```text
+.github/workflows/build.yml    GitHub Actions 自动构建与 Release
 oracle_batch_query.py          主程序
 requirements.txt               运行依赖
-build_exe.ps1                  PyInstaller 打包脚本
-build_exe.bat                  双击打包入口
-dist/OracleBatchQuery.exe      已构建的 Windows 单文件程序
+build_exe.ps1                  本地 PyInstaller 打包脚本
+build_exe.bat                  本地双击打包入口
+dist/                          本地打包输出，不纳入版本库
 ```
